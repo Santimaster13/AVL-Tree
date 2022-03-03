@@ -7,7 +7,6 @@ package avl.tree;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 
 /**
  *
@@ -18,8 +17,10 @@ public class UI extends javax.swing.JFrame {
     /**
      * Creates new form UI
      */
-    public UI() {
+    public Tree tree;
+    public UI(Tree t) {
         initComponents();
+        this.tree = t;
     }
 
     /**
@@ -41,6 +42,7 @@ public class UI extends javax.swing.JFrame {
         gramps = new javax.swing.JButton();
         uncle = new javax.swing.JButton();
         prompt = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
 
         jCheckBoxMenuItem1.setSelected(true);
         jCheckBoxMenuItem1.setText("jCheckBoxMenuItem1");
@@ -55,86 +57,245 @@ public class UI extends javax.swing.JFrame {
         });
 
         del.setText("Eliminar");
+        del.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                delActionPerformed(evt);
+            }
+        });
 
         search.setText("Buscar");
+        search.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Ingrese el valor del Nodo y seleccione la acción que desea realizar:");
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
-        jLabel2.setText("Arból Binario de Búsqueda Autobalanceable");
+        jLabel2.setText("Árbol Binario de Búsqueda Autobalanceable");
 
         gramps.setText("Encontrar abuelo");
+        gramps.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                grampsActionPerformed(evt);
+            }
+        });
 
         uncle.setText("Encontrar tío");
+        uncle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                uncleActionPerformed(evt);
+            }
+        });
+
+        prompt.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        prompt.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+
+        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 853, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 429, Short.MAX_VALUE)
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(137, Short.MAX_VALUE)
-                .addComponent(jLabel2)
-                .addGap(107, 107, 107))
             .addGroup(layout.createSequentialGroup()
-                .addGap(23, 23, 23)
+                .addGap(129, 129, 129)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
+                    .addComponent(jLabel2)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(val, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(37, 37, 37)
-                                .addComponent(add)
-                                .addGap(33, 33, 33)
-                                .addComponent(del))
-                            .addComponent(prompt, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(28, 28, 28)
+                        .addGap(49, 49, 49)
+                        .addComponent(jLabel1)
+                        .addGap(49, 49, 49)
+                        .addComponent(val, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(add)
+                        .addGap(55, 55, 55)
+                        .addComponent(del)
+                        .addGap(66, 66, 66)
                         .addComponent(search)
-                        .addGap(28, 28, 28)
+                        .addGap(43, 43, 43)
                         .addComponent(gramps)
-                        .addGap(28, 28, 28)
+                        .addGap(43, 43, 43)
                         .addComponent(uncle)))
                 .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(45, 45, 45)
+                        .addComponent(prompt, javax.swing.GroupLayout.PREFERRED_SIZE, 840, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(51, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(26, 26, 26)
+                .addContainerGap()
                 .addComponent(jLabel2)
                 .addGap(18, 18, 18)
-                .addComponent(jLabel1)
-                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(val, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1)
+                    .addComponent(val, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(34, 34, 34)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(add)
                     .addComponent(del)
                     .addComponent(search)
                     .addComponent(gramps)
                     .addComponent(uncle))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(prompt, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(454, Short.MAX_VALUE))
+                .addComponent(prompt, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-  
-    //
+     
+    @Override
+    public void paintComponents(Graphics g){
+        //super.paintComponents(g); For some reason this bugs the Frame.
+        this.revalidate(); 
+        int X2 = (getWidth()/12);
+        int Y = getHeight()/12;
+        pseudoclear(jPanel2.getGraphics());
+        int X = (getWidth()/5);//*tree.GetHeight(tree.root);
+        if (tree.GetHeight(tree.root) >=5){            
+           pintaArbol(jPanel2.getGraphics(), tree.root, (this.getWidth()-tree.GetHeight(tree.root)*13)/2, Y, X2, Y,0);  
+        } else {
+            pintaArbol(jPanel2.getGraphics(), tree.root, this.getWidth()/2, Y, X2, Y,0);  
+        }
+        
+        
+        
+    }
+    
     private void addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addActionPerformed
+        prompt.setText("");
         if (val.getText().isEmpty()){
             prompt.setText("Por favor ingrese un número");
         } else {
             if (val.getText().chars().allMatch(Character :: isDigit) == true){
-                int number = Integer.parseInt(val.getText()); 
-                Tree tree = new Tree();
-                
-          
+                int number = Integer.parseInt(val.getText());
+                if (number > 999 || number < -99){
+                   prompt.setText("Por favor ingrese un número de 3 dígitos o menos"); 
+                }  else {
+                if(tree.SearchNode(tree.root, number) != null){
+                    prompt.setText("Ya existe un nodo con ese valor");
+                } else {
+                tree.AddNode(number);
+                paintComponents(jPanel2.getGraphics());
+                //tree.NormalTraverse(tree.root);
+                }
+                }
             } else {
                 prompt.setText("Por favor ingrese un número entero válido");
             }
         }
-        
     }//GEN-LAST:event_addActionPerformed
+
+    private void delActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delActionPerformed
+        prompt.setText("");
+        if (val.getText().isEmpty()){
+            prompt.setText("Por favor ingrese un número");
+        } else {
+            if (val.getText().chars().allMatch(Character :: isDigit) == true){
+                int number = Integer.parseInt(val.getText());
+                if (number > 999 || number < -99){
+                   prompt.setText("Por favor ingrese un número de 3 dígitos o menos"); 
+                }  else {
+                if(tree.SearchNode(tree.root, number) == null){
+                    prompt.setText("No existe un nodo con ese valor");
+                } else {
+                tree.DeleteNode(number);
+                paintComponents(jPanel2.getGraphics());
+                //tree.NormalTraverse(tree.root);
+                }
+                }
+            } else {
+                prompt.setText("Por favor ingrese un número entero válido");
+            }
+        } 
+    }//GEN-LAST:event_delActionPerformed
+
+    private void searchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchActionPerformed
+        prompt.setText("");
+        if (val.getText().isEmpty()){
+            prompt.setText("Por favor ingrese un número");
+        } else {
+            if (val.getText().chars().allMatch(Character :: isDigit) == true){
+                int number = Integer.parseInt(val.getText());
+                if (number > 999 || number < -99){
+                   prompt.setText("Por favor ingrese un número de 3 dígitos o menos"); 
+                }  else {
+                if(tree.SearchNode(tree.root, number) == null){
+                    prompt.setText("No existe un nodo con ese valor");
+                } else {
+                    prompt.setText("Existe un nodo con ese valor en el arbol");
+                }
+                }
+            } else {
+                prompt.setText("Por favor ingrese un número entero válido");
+            }
+        } 
+    }//GEN-LAST:event_searchActionPerformed
+
+    private void grampsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_grampsActionPerformed
+        prompt.setText("");
+        if (val.getText().isEmpty()){
+            prompt.setText("Por favor ingrese un número");
+        } else {
+            if (val.getText().chars().allMatch(Character :: isDigit) == true){
+                int number = Integer.parseInt(val.getText());
+                if (number > 999 || number < -99){
+                   prompt.setText("Por favor ingrese un número de 3 dígitos o menos"); 
+                }  else {
+                if(tree.FindGramps(number) == null){
+                    prompt.setText("El nodo no tiene abuelo");
+                } else {
+                    prompt.setText("El nodo tiene un abuelo con valor de " + tree.FindGramps(number).value);
+                }
+                }
+            } else {
+                prompt.setText("Por favor ingrese un número entero válido");
+            }
+        } 
+    }//GEN-LAST:event_grampsActionPerformed
+
+    private void uncleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uncleActionPerformed
+        prompt.setText("");
+        if (val.getText().isEmpty()){
+            prompt.setText("Por favor ingrese un número");
+        } else {
+            if (val.getText().chars().allMatch(Character :: isDigit) == true){
+                int number = Integer.parseInt(val.getText());
+                if (number > 999 || number < -99){
+                   prompt.setText("Por favor ingrese un número de 3 dígitos o menos"); 
+                }  else {
+                if(tree.FindUncle(number) == null){
+                    prompt.setText("El nodo no tiene tío");
+                } else {
+                    prompt.setText("El nodo tiene un tío con valor de " + tree.FindUncle(number).value);
+                }
+                }
+            } else {
+                prompt.setText("Por favor ingrese un número entero válido");
+            }
+        }
+    }//GEN-LAST:event_uncleActionPerformed
 
     /**
      * @param args the command line arguments
@@ -166,7 +327,7 @@ public class UI extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new UI().setVisible(true);
+                //new UI(Tree t).setVisible(true);
             }
         });
     }
@@ -178,11 +339,50 @@ public class UI extends javax.swing.JFrame {
     private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JLabel prompt;
     private javax.swing.JButton search;
     private javax.swing.JButton uncle;
     private javax.swing.JTextField val;
     // End of variables declaration//GEN-END:variables
 
+    private void pintaArbol(Graphics g, Node n, int x, int y,int xoff,int yoff,int nivel){
+     if (n == null){
+         return;
+     }
+     g.setColor(Color.black);
+     if(n.left!= null){
+         g.drawLine(x, y, (int) (x-xoff*tree.GetHeight(n)*tree.GetHeight(n)*0.2), y + yoff);
+     }
+     if(n.right!= null){
+         g.drawLine(x, y, (int) (x+xoff*tree.GetHeight(n)*tree.GetHeight(n)*0.2), y + yoff);
+     }
+    
+     if (tree.root == n){
+        g.fillOval(x-10, y-20, 30, 30);  
+     } else {
+         if (tree.root.right.value <= n.value){
+             g.fillOval(x-10, y-20, 30, 30);  
+         } else {
+             g.fillOval(x-10, y-20, 30, 30);  
+         }
+        
+     }
+     
+     
+     g.setColor(Color.white);
+     g.drawString(n.value+"", x-3 , y );
+     
+     pintaArbol(g, n.left, (int)(x-xoff*tree.GetHeight(n)*tree.GetHeight(n)*0.2), (y + yoff),xoff+nivel*2,yoff,nivel+1);
+     pintaArbol(g, n.right, (int)(x+xoff*tree.GetHeight(n)*tree.GetHeight(n)*0.2), (y + yoff),xoff-nivel*2,yoff,nivel+1);
+    }
+    
+    private void pseudoclear(Graphics g){
+        g.setColor(Color.white);
+        g.fillRect(0, 0, jPanel2.getWidth(), jPanel2.getHeight());
+                
+    }
+    
+    
   
 }

@@ -15,14 +15,12 @@ public class AVLTree {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        //UI ui = new UI();
-        //ui.setSize(800, 900);
-        //ui.setResizable(false);
-        //ui.setVisible(true);
-        Tree tree = new Tree(); //We create a Binary Tree and add some values to it.
-        tree.AddNode(5);
-        tree.DeleteNode(5);
-        tree.NormalTraverse(tree.root);
+        Tree tree = new Tree();
+        UI ui = new UI(tree);
+        ui.setSize(900, 900);
+        ui.setResizable(false);
+        ui.setVisible(true);
+ 
     }
     
 }

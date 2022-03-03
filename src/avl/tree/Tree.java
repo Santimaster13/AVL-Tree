@@ -5,6 +5,8 @@
  */
 package avl.tree;
 
+import java.awt.List;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
@@ -22,7 +24,6 @@ public class Tree {
             while(c == true){
             if (data == n.value){ //If the value already exist, a new node is not created.
                 c = false;
-                System.out.println("Ya existe un nodo con ese valor");
             } else {
             if (data < n.value){ //We take advantage of the properties of a search tree to minimize the iterations required.
                 if (n.left == null){ //Once we find the spot where the value should go, we create a new node with the value given, link it to the tree and end the iterations.
@@ -48,7 +49,7 @@ public class Tree {
         if (this.root == null){ //If there are no nodes, we create the new node with the given value and assign it as the root.
             this.root = new Node(data); 
         } else {
-        this.AddNode2(root, data); //We 
+        this.AddNode2(root, data); //We use the secondary subroutine explained above 
         boolean keep = this.RebalanceNeeded(root, data); //We check if the tree is unbalanced after adding the node and after each rebalance, and keep rebalancing it until the tree is fully balanced.
         while (keep == true){
           this.RebalancingTraverse(root, data); 
@@ -134,7 +135,6 @@ public class Tree {
         }
         
         int newval = temp.value; //We store the value of the node in the bottom of the tree and then look for their parent.
-        System.out.println(newval);
         if (SearchParent(this.root, newval).right == temp){ //Once we find the parent, we delete the node.
             SearchParent(this.root, newval).right = null;
         } else {
@@ -145,7 +145,7 @@ public class Tree {
         //In order for this to work, we search for the lowest value of the right subtree, or the highest value of the left subtree. That way we keep the number balance.
     }
     
-    private Node SearchParent(Node n, int data){ //A simple level traverse using the properties of a search tree. With every iterarion, we check look for the node with a child with the given value and return it.
+    public Node SearchParent(Node n, int data){ //A simple level traverse using the properties of a search tree. With every iterarion, we check look for the node with a child with the given value and return it.
          Queue<Node> queue = new LinkedList<Node>(); //We assume that the node we're looking for exists because we know that the child node exists and the node that's going to be deleted isn't the root.
         queue.add(n);
         while (queue.isEmpty()==false){
@@ -172,7 +172,7 @@ public class Tree {
     
     public void DeleteNode(int data){ //This is the subroutine for the user
         if (this.root == null){  
-            System.out.println("No hay nodos que eliminar"); //We take into account the possibility that the tree is empty and that only the root exists. In this cases, we can solve the problem without caling other subroutines.
+    //We take into account the possibility that the tree is empty and that only the root exists. In this cases, we return null to avoid problems
         } else {
             if (data == this.root.value && this.root.left == null && this.root.right == null){
                 this.root = null;
@@ -215,8 +215,12 @@ public class Tree {
         }
     }
     
+    public int GetHeight(Node n){ //a Getter to be used in the JFrame.
+        return Height(n);
+    }
+    
     private int BFactor(Node n){
-        return Height(n.right)-Height(n.left); //We look for the balance factor.
+        return Height(n.right)-Height(n.left); //We look for the balance factor by comparing the right and left subtrees' heights.
     }
     
     private boolean RebalanceNeeded(Node n, int data){ //A simple level traverse search in which we look if the tree needs rebalancing using the balance factors (if a single node requires rebalancing then the tree requires rebalancing too).
@@ -224,7 +228,7 @@ public class Tree {
         queue.add(n);
         while (queue.isEmpty()==false){
             Node temp = queue.poll();
-            if (this.BFactor(temp) > 1 || this.BFactor(temp) < -1){
+            if (this.BFactor(temp) > 1 || this.BFactor(temp) < -1){ //We check the balance factors and return if the tree needs balancing or not.
                 return true;
             }
             if (temp.right != null && data > temp.value){
@@ -237,20 +241,33 @@ public class Tree {
         return false;
     }
     
-    private void RebalancingTraverse(Node n, int data){ //A simple level traverse in which we rebalance all nodes in the tree (In the Rebalance subroutine we check if the rebalance is needed or not, so we can call that subroutine to every node in the tree without issues).
-        Queue<Node> queue = new LinkedList<Node>();
-        queue.add(n);
-        while (queue.isEmpty()==false){
-            Node temp = queue.poll();
-            this.root = this.Rebalance(this.root);
-            if (temp.right != null && data > temp.value){
-                temp.right = this.Rebalance(temp.right);
-                queue.add(temp.right);
-            }
-            if (temp.left != null && data < temp.value){
-                temp.left = this.Rebalance(temp.left);
-                queue.add(temp.left);
-            }
+    private void RebalancingTraverse(Node n, int data){ //In order to rebalance from bottom to top, we make use of the level traverse explained further ahead.
+        for (int level=this.Height(this.root); level >= 1; level--){ 
+            this.RecursiveTraverseR(root, level, data);          
+        }
+        this.root = this.Rebalance(this.root);
+        
+    }
+    
+     private void RecursiveTraverseR(Node n, int l, int data){ //A simple level traverse search but with the use of recursion (kinda). 
+        if (n == null){
+            return; //This subroutine will be explained further ahead in RecursiveTraverse.
+        } else { 
+                if (n.value > data){
+                    if (l-1 == 0){
+                        n.left = this.Rebalance(n.left);
+                    } else {
+                       RecursiveTraverseR(n.left, l-1, data);  
+                    }
+                   
+                } else {
+                    if (l-1 == 0){
+                        n.right = this.Rebalance(n.right);
+                    } else {
+                        RecursiveTraverseR(n.right, l-1, data); 
+                    }
+                   
+                }                
         }
     }
     
@@ -276,6 +293,7 @@ public class Tree {
         if (this.BFactor(x) == 2){ //First we check if the node needs rebalancing or not., and which side is the one that is unbalanced. 
             if (Height(x.right.right) > Height(x.right.left)){ //After knowing which side of the tree is unbalanced, whe check if the node requires a simple rotation or a double rotation, and balance accordingly.
                x = rotateR(x); 
+               System.out.println(" aqui ");
             } else {
                 x.right = rotateL(x.right);
                 x = rotateR(x);
@@ -291,12 +309,15 @@ public class Tree {
         return x;
     }
     
-    private Node SearchNode(Node n, int data){ //A simple level traversal search to return a node with a given value.
+    public Node SearchNode(Node n, int data){ //A simple level traversal search to return a node with a given value.
         Queue<Node> queue = new LinkedList<Node>();
+        if (n == null){
+            return null;
+        }
         queue.add(n);
         while (queue.isEmpty()==false){
             Node temp = queue.poll();
-            if (data == temp.value){
+             if (data == temp.value){
                 return temp;
             }
             if (temp.right != null && data > temp.value){
@@ -321,14 +342,14 @@ public class Tree {
         }
     }
     
-    private Node SearchGramps(Node n, int data){
+    private Node SearchGramps(Node n, int data){ //A simple level traverse search
         Queue<Node> queue = new LinkedList<Node>();
         queue.add(n);
         while (queue.isEmpty()==false){
             Node temp = queue.poll();
-            if (temp.right != null && data > temp.value){
-                if ((temp.right.left != null && temp.right.left.value == data) || (temp.right.right != null && temp.right.right.value == data)){
-                    return temp;
+            if (temp.right != null && data > temp.value){ //We look at the child nodes to check if they exist, if they do, we check if they have childs and if they also do, we verify if the value of the grandchild node is the same as the given value.
+                if ((temp.right.left != null && temp.right.left.value == data) || (temp.right.right != null && temp.right.right.value == data)){ 
+                    return temp; //In case we find the grandchild, we return the grandparent node.
                 }
                 queue.add(temp.right);
             }
@@ -339,30 +360,30 @@ public class Tree {
                 queue.add(temp.left);
             }
         }
-        return null;
+        return null; //We return null in case we never find a grandchild with the given value.
     }
     
-    public void FindGramps(int data){
+    public Node FindGramps(int data){ //Subroutine destined for the user, takes into account the posibility of an empty tree.
         if (this.root == null){
-           System.out.println("No hay nodos en el árbol binario"); 
+           return null;
         } else {
-             if (SearchGramps(root, data) == null){
-                System.out.println("El nodo no tiene un abuelo");
+             if (SearchGramps(this.root, data) == null){ //Calls the above subroutine, if it returns null we tell the user the node doesn´t have a grandparent, else we print the grandparent node's value.
+                return null;
             } else {
-                System.out.println("El nodo tiene un abuelo con valor "+ this.SearchGramps(root, data).value);
+                return this.SearchGramps(this.root, data);
             }
         }
     }
     
-    private Node SearchUncle(Node n, int data){
+    private Node SearchUncle(Node n, int data){ //A SIMPle level traverse search (see what I did there :p).
        Queue<Node> queue = new LinkedList<Node>();
         queue.add(n);
         while (queue.isEmpty()==false){
             Node temp = queue.poll();
-            if (temp.right != null && data > temp.value){
+            if (temp.right != null && data > temp.value){ //Same principle used in the SearchGramps subroutine, we look for a grandchild node with the given value.
                 if ((temp.right.left != null && temp.right.left.value == data) || (temp.right.right != null && temp.right.right.value == data)){
-                    return temp.left;
-                }
+                    return temp.left; //However, instead of returning the grandparent node, we return the uncle node (if it exists). Essentially, we return the left child if the grandchild node is in the right subtree and viceversa.
+                } 
                 queue.add(temp.right);
             }
             if (temp.left != null && data < temp.value){
@@ -372,17 +393,17 @@ public class Tree {
                 queue.add(temp.left);
             }
         }
-        return null; 
+        return null; //In case we don´t find an uncle node, we return null
     }
     
-     public void FindUncle(int data){
+     public Node FindUncle(int data){ //Subroutine destined for the user, takes into account the posibility of an empty tree.
         if (this.root == null){
-           System.out.println("No hay nodos en el árbol binario"); 
+           return null;
         } else {
-             if (SearchUncle(root, data) == null){
-                System.out.println("El nodo no tiene un abuelo");
+             if (SearchUncle(this.root, data) == null){ //Calls the above subroutine, if it returns null we tell the user the node doesn´t have an uncle, else we print the uncle node's value.
+                return null;
             } else {
-                System.out.println("El nodo tiene un abuelo con valor "+ this.SearchUncle(root, data).value);
+                return this.SearchUncle(this.root, data);
             }
         }
     }
@@ -390,7 +411,7 @@ public class Tree {
     public void NormalTraverse (Node n){ 
         for (int level=0; level <= this.Height(this.root); level++){ //Calls RecursiveTraverse in order of levels (A bit of a trick to make the recursion level traverse work).
             System.out.println("LEVEL: " + level);
-            this.RecursiveTraverse(root, level); //This is the best I could find in recursion, most answers were that using recursion for this is useless (I agree :p).
+            this.RecursiveTraverse(root, level); 
             
         }
     }
@@ -401,10 +422,33 @@ public class Tree {
         } else {
             if (l == 0){ //It only prints the nodes in the given level
                 System.out.println("     Valor: " + n.value);
-            } else if(l > 0){
+            } else if(l > 0){ //The l, acts as a counter variable, every time we move to the child, we dimish it becasue we diminish the distance in levels between the one we're in and the one we're looking for.
                 RecursiveTraverse(n.left, l-1); //Calls itself (see, recursion!) but with the childs to look for all the nodes with the given level in the tree
                 RecursiveTraverse(n.right, l-1);
             }
         }
     }
-}
+    
+    public int NodeLevel(Node n){  //A simple level traverse search that we use to finde a node's level
+        int lvl = 0; //We use a counter variable to count how many times we go down in the tree. It starts at 0 bc its the lowest level. We assume the tree is not empty.
+        Queue<Node> queue = new LinkedList<Node>();
+        queue.add(this.root);
+        while (queue.isEmpty()==false){
+            Node temp = queue.poll();
+            if (temp == n){ //When we find the node with the given value, we return the counter variable.
+                return lvl;
+            }
+            if (temp.right != null && n.value > temp.value){ //In order to avoid measurment issues, we take advantage of the properties of a seacrh tree.
+                queue.add(temp.right);
+            }
+            if (temp.left != null && n.value < temp.value){
+                queue.add(temp.left);
+            }
+            lvl++; //We go down after going down in the tree, regardless if it's left or right.
+        }
+        return 0; //I never used this subroutine but might as well leave it here XD.
+    }
+    
+    
+    }
+
