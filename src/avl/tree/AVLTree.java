@@ -17,7 +17,7 @@ public class AVLTree {
     public static void main(String[] args) {
         Tree tree = new Tree();
         UI ui = new UI(tree);
-        ui.setSize(900, 900);
+        ui.setSize(1200, 900);
         ui.setResizable(false);
         ui.setVisible(true);
  
